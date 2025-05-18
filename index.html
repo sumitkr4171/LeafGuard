@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Health Checker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-light: #81C784;
+            --primary-dark: #388E3C;
+            --background: #F5F7F5;
+            --white: #FFFFFF;
+            --text: #2C3E50;
+            --error: #E57373;
+            --success: #81C784;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .upload-section {
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--primary-light);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 15px;
+            margin: 1rem auto;
+            display: block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-content {
+            margin-top: 1.5rem;
+        }
+
+        .result-content h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .result-item {
+            background-color: var(--background);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .result-item strong {
+            color: var(--primary-dark);
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .success-message {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .loading-spinner {
+            border: 4px solid var(--background);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .seasonal-tips {
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .seasonal-tips h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tips-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .tip-box {
+            background-color: var(--background);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .tip-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .tip-box p {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .upload-section {
+                padding: 1rem;
+            }
+
+            .button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .tips-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Plant Health Checker</h1>
+            <p>Upload a photo of your plant leaf to check for diseases</p>
+        </div>
+
+        <div class="upload-section">
+            <button id="testConnection" class="button" style="margin-bottom: 1rem;">Test Server Connection</button>
+            <form id="uploadForm">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">🌿</div>
+                    <p>Click or drag an image here</p>
+                    <input type="file" name="image" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png" required>
+                </div>
+                <button type="submit" class="button" id="analyzeButton">Analyze Plant</button>
+            </form>
+        </div>
+
+        <div class="message" id="errorMessage"></div>
+        <div class="message" id="successMessage"></div>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Analyzing your plant...</p>
+        </div>
+
+        <div class="result-section" id="result">
+            <img id="previewImage" class="preview-image" alt="Uploaded plant leaf">
+            <div class="result-content">
+                <h2>Analysis Result</h2>
+                <div class="result-item">
+                    <strong>Disease:</strong> <span id="diseaseName"></span>
+                </div>
+                <div class="result-item">
+                    <strong>Solution:</strong> <span id="solution"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="seasonal-tips" id="seasonalTips">
+            <h2>Seasonal Care Tips</h2>
+            <div class="tips-container">
+                <div class="tip-box">
+                    <h3>Common Issues This Month</h3>
+                    <p id="commonIssues"></p>
+                </div>
+                <div class="tip-box">
+                    <h3>Care Recommendations</h3>
+                    <p id="careTips"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        // Test server connection
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${API_URL}/api/test`);
+                const data = await response.json();
+                successMessage.textContent = 'Server is connected!';
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            } catch (error) {
+                errorMessage.textContent = 'Cannot connect to server. Please make sure the server is running.';
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+        });
+
+        // Handle drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary-color)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--primary-light)';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary-light)';
+            fileInput.files = e.dataTransfer.files;
+        });
+
+        // Handle click to upload
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle form submission
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Reset UI
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            result.style.display = 'none';
+            loading.style.display = 'block';
+            analyzeButton.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/analyze`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Display result
+                    document.getElementById('previewImage').src = `${API_URL}/uploads/${data.filename}`;
+                    document.getElementById('diseaseName').textContent = data.disease;
+                    document.getElementById('solution').textContent = data.solution;
+                    result.style.display = 'block';
+
+                    // Display seasonal tips
+                    document.getElementById('commonIssues').textContent = data.monthlyTips.commonIssues;
+                    document.getElementById('careTips').textContent = data.monthlyTips.careTips;
+                    document.getElementById('seasonalTips').style.display = 'block';
+
+                    successMessage.textContent = 'Analysis completed successfully!';
+                    successMessage.style.display = 'block';
+                } else {
+                    throw new Error(data.error || 'Something went wrong');
+                }
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                analyzeButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 
